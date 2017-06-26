@@ -156,7 +156,7 @@ class Player{
     }
 
   look(dx = null, dy = null){
-    if(dx != null && dy != null){
+    if(dx != null && dy != null && this.lightsOn == false){
       if(dx < 0 && dy < 0)
         this.facing = 'northwest';
       else if(dx > 0 && dy > 0)
