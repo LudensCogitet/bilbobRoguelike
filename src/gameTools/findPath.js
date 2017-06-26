@@ -1,5 +1,5 @@
 function findPath(map, start, end, testType = 'direct', impassable = [1]){
-  var open = [{pos: start, parent: null}];
+  var open = [{pos: start, parent: null, cost: 10000}];
   var closed = [];
   var finalPos = false;
 
@@ -12,7 +12,8 @@ function findPath(map, start, end, testType = 'direct', impassable = [1]){
   }
 
   while(open.length != 0){
-    var current = open.pop();
+    var current = open.shift();
+    //console.log(current.distanceToGoal, " ", open.length);
 
     if(current.pos.x == end.x && current.pos.y == end.y){
       if(testType == 'exists'){
@@ -42,12 +43,23 @@ function findPath(map, start, end, testType = 'direct', impassable = [1]){
                           closed.push({pos: option, parent: current});
                         }
                         else{
-                          open.push({pos: option, parent: current});
+                          var heuristic = 0;
+                          if(testType == 'direct'){
+                            let dx = Math.abs(option.x - end.x)
+                            let dy = Math.abs(option.y - end.y)
+                            heuristic = 1 * (dx + dy) + (1 - 2 * 1) * Math.min(dx, dy); //Math.sqrt(Math.pow(end.x - option.x,2) + Math.pow(end.y - option.y,2));
+                            var index = open.findIndex(el=>{return el.cost == heuristic});
+                            if(index == -1)
+                              index = 0;
+                          }
+                          open.unshift({pos: option, parent: current, cost: heuristic});
                         }
                       }
                      });
       closed.push(current);
     }
+    if(testType == 'direct')
+      open.sort((a,b)=>{return a.cost - b.cost;});
   }
 
   if(finalPos == false){

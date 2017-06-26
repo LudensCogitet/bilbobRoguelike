@@ -25,18 +25,21 @@ class Enemy{
     this.move = this.move.bind(this);
     this.detectCollision = detectCollision.bind(this);
     this.look = this.look.bind(this);
+
+    this.level.player.act(this,'ping');
   }
 
   look(){
     castRays(this.pos,this.level,this.sightRadius,{start:0,end:360},(oxFloor,oyFloor)=>{
-                     if(this.level.checkCell(oxFloor,oyFloor,'type','player')){
-                      this.lineOfSightTarget = {x: oxFloor, y: oyFloor};
-                      this.path = null;
-                      this.currentStep = 0;
+                     var translucent = this.level.checkCell(oxFloor,oyFloor,'translucent',true);
+                     if(!translucent){
                       return false;
                      }
-                     else{
-                      return this.level.checkCell(oxFloor,oyFloor,'translucent',true);
+                     else if(this.level.checkCell(oxFloor,oyFloor,'type','player')){
+                      this.lineOfSightTarget = {x: oxFloor, y: oyFloor};
+                      this.path = findPath(this.level.collisionMap,this.pos,this.lineOfSightTarget);
+                      this.currentStep = 0;
+                      return false;
                      }
                     });
   }
@@ -58,28 +61,6 @@ class Enemy{
       else{
         this.currentStep = 0;
         this.path = null;
-      }
-    }
-    else if(this.lineOfSightTarget != null){
-      var incX = 0;
-      var incY = 0;
-
-      if(this.lineOfSightTarget.x < this.pos.x)
-        incX = -1;
-      else if(this.lineOfSightTarget.x > this.pos.x)
-        incX = 1;
-
-      if(this.lineOfSightTarget.y < this.pos.y)
-        incY = -1;
-      else if(this.lineOfSightTarget.y > this.pos.y)
-        incY = 1;
-
-      var newX = this.pos.x += incX;
-      var newY = this.pos.y += incY;
-
-      if(!this.detectCollision(newX,newY)){
-        this.pos.x = newX;
-        this.pos.y = newY;
       }
     }
   }

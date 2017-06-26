@@ -13,7 +13,7 @@ class Manager{
     this.enemySpawners = [];
 
     this.level = level;
-    this.timeToLightsOut = 40;
+    this.timeToLightsOut = -1;
 
     this.addEnemySpawner = this.addEnemySpawner.bind(this);
   }
@@ -24,8 +24,8 @@ class Manager{
 
   act(cause, action = null){
     if(cause.type == 'level'){
-      //console.log(this.timeToLightsOut);
-      if(this.timeToLightsOut > -1){
+      console.log(this.timeToLightsOut);
+      if(this.timeToLightsOut != -1){
         if(this.timeToLightsOut > 0)
           this.timeToLightsOut--;
         else{
@@ -37,6 +37,9 @@ class Manager{
           });
         }
       }
+    }
+    else if(cause.type == 'goal'){
+      this.timeToLightsOut = 1;
     }
   }
 }

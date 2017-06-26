@@ -35,7 +35,7 @@ class Player{
                            };
 
     this.lightAngle = null;
-    this.facing = 'left';
+    this.facing = 'lightsOn';
 
     this.lightLevels = {full: 0,
                         dark: 0};

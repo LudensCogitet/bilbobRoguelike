@@ -9,7 +9,7 @@ class Screen extends Component{
   render(){
     return(
     <div ref={this.props.getScreenRef} className='screenDiv' style={{fontSize: 0, margin: 0, border: 0}}>
-      {this.props.cells.map((el)=>{return <Row cellSize={this.props.cellSize} cells={el} />;})};
+      {this.props.cells.map((el,index)=>{return <Row key={index} cellSize={this.props.cellSize} cells={el} />;})};
     </div>
     );
   }

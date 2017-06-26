@@ -9,7 +9,7 @@ class Row extends Component{
   render(){
     return (
       <div>
-      {this.props.cells.map((el)=>{return <Square cellSize={this.props.cellSize} images={el}/>;})}
+      {this.props.cells.map((el,index)=>{return <Square key={index} cellSize={this.props.cellSize} images={el}/>;})}
       </div>
       );
   }

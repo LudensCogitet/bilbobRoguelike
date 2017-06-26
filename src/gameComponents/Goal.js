@@ -26,7 +26,7 @@ class Goal{
       }
     }
     if(cause.type == 'player' && action == 'collision'){
-      cause.act(this, 'collision');
+      this.level.broadcast(this,'collision');
       this.level.deleteEntity(this);
     }
   }
