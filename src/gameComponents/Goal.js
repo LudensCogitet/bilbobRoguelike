@@ -14,6 +14,7 @@ class Goal{
 
     this.emitMessageEvery = getRandomInt(10,21);
     this.currentTick = 0;
+    this.level.broadcast(this,'ping');
   }
 
   act(cause, action = null){

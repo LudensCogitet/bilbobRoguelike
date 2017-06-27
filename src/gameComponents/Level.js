@@ -56,7 +56,7 @@ class Level{
   }
 
   generateMap(width, height){
-    this.collisionMap = mapGenerator.makeMap(width,height,0.75,0.5,0.3,1);
+    this.collisionMap = mapGenerator.makeMap(width,height,0.75,0.5,0.1,1);
     console.log(mapGenerator.printMap(this.collisionMap));
     var manager = new Manager(this);
     for(let y = 0; y < height; y++){

@@ -47,7 +47,6 @@ class Player{
 
   addLevel(level){
     this.level = level;
-    //this.illuminate();
   }
 
   addCamera(camera){
@@ -58,6 +57,7 @@ class Player{
     this.lightLevels.dark = Math.floor(maxLevelDimension/4 > 4 ? maxLevelDimension/4 : 4);
 
     this.look()
+    this.illuminate();
   }
 
   act(cause, action = null){
@@ -87,28 +87,28 @@ class Player{
        }
 
        if(cause.type == 'goal'){
-         var textOptions = ['The unsettling sound of jangling keys and mouth-breathing can be heard from the '+northSouth+eastWest+comment,
-                            'A mischievous cackle reaches your ears from the '+northSouth+eastWest+comment,
-                            'You can hear the pitter-patter of that little bastard\'s tiny feet coming from the '+northSouth+eastWest+comment];
+         var textOptions = ['<span class="blue">The unsettling sound of jangling keys and mouth-breathing can be heard from the '+northSouth+eastWest+comment + '</span>',
+                            '<span class="blue">A mischievous cackle reaches your ears from the '+northSouth+eastWest+comment + '</span>',
+                            '<span class="blue">You can hear the pitter-patter of that little bastard\'s tiny feet coming from the '+northSouth+eastWest+comment + '</span>'];
 
-         this.game.logText(textOptions[getRandomInt(0,3)]);
+         this.game.logText(textOptions[getRandomInt(0,3)],1);
        }
        else if(cause.type == 'door'){
-         this.game.logText('You hear a door slam open somewhere to the '+northSouth+eastWest+comment);
+         this.game.logText('<span class="red">You hear a door slam open somewhere to the '+northSouth+eastWest+comment + '</span>',0);
        }
        else if(cause.type == 'enemy'){
         switch(this.level.map[cause.pos.y][cause.pos.x].subtype){
           case 'wet':
-            this.game.logText('Something splashes through a puddle to the '+northSouth+eastWest+comment);
+            this.game.logText('<span class="red">Something splashes through a puddle to the '+northSouth+eastWest+comment + '</span>',0);
           break;
           case 'crunchy':
-            this.game.logText('You hear claws clacking on stones to the '+northSouth+eastWest+comment);
+            this.game.logText('<span class="red">You hear claws clacking on stones to the '+northSouth+eastWest+comment + '</span>',0);
           break;
           case 'soft':
-            this.game.logText('There\'s a rustling sound to the '+northSouth+eastWest+comment);
+            this.game.logText('<span class="red">There\'s a rustling sound to the '+northSouth+eastWest+comment + '</span>',0);
           break;
           default:
-            this.game.logText('You hear a terrible howling coming from the '+northSouth+eastWest+comment);
+            this.game.logText('<span class="red">You hear a terrible howling coming from the '+northSouth+eastWest+comment + '</span>',0);
         }
        }
       }

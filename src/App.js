@@ -32,7 +32,7 @@ class App extends React.Component{
 
     var focus = 1;
 
-
+    this.textStagingArea = [];
     this.player = new Player(0,0,imageLibrary.getImage('player'),this);
     this.level = new Level(props.levelWidth,props.levelHeight,this.player,this);
     this.camera = new Camera(cameraWidth,cameraHeight,this.level,this.player,focus);
@@ -43,10 +43,8 @@ class App extends React.Component{
                        'So you get out in the dead of night to survey the damage on some godforsaken back mountain road, \'looks like you\'re about to get jumped by Bela Lugosi or some crap,<p />'+
       'and a goblin steals your truck keys.<p />'+
       'You\'ve followed him into this spooky old castle. \'Look\'s abandoned except there are lights on all over the place.<br />'+
-      'Whatever.. you need to get those keys back, or you\'re up a creek.<p />'+
-      'You can still hear the little bastard jingling \'em and giggling somewhere inside, to the west.<p /><p />';
-    this.textStagingArea = '';
-    this.textStagingAreaColor = 'rgba(255,255,255,0.2)';
+      'Whatever.. you need to get those keys back, or you\'re up a creek.<p /><p />';
+    //this.textStagingAreaColor = 'rgba(255,255,255,0.2)';
 
     this.outerDiv = null;
     this.setupScreenDiv = this.setupScreenDiv.bind(this);
@@ -72,8 +70,8 @@ class App extends React.Component{
     this.stopPlay = true;
   }
 
-  logText(text){
-    this.textStagingArea += text + '<p />';
+  logText(text,priority = 2){
+    this.textStagingArea.push({text:text, priority: priority});
   }
 
   renderScreen(){
@@ -88,11 +86,13 @@ class App extends React.Component{
         this.camera.checkMove();
         this.level.act();
 
-        if(this.textStagingArea != ''){
-          this.consoleText += '<div style="background-color:'+
-            this.textStagingAreaColor+'">' + this.textStagingArea + '</div>';
-          this.textStagingArea = '';
-          this.textStagingAreaColor = this.textStagingAreaColor == 'rgba(255,255,255,0.2)' ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.2)';
+        if(this.textStagingArea.length > 0){
+          this.textStagingArea.sort((a,b)=>{return b.priority - a.priority;});
+          let newText = this.textStagingArea.map((el)=>{return el.text;});
+          newText = newText.join('<p />')
+          this.consoleText += '<div>' + newText + '</div>';
+          this.textStagingArea = [];
+          //this.textStagingAreaColor = this.textStagingAreaColor == 'rgba(255,255,255,0.2)' ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.2)';
           }
 
         this.setState({screen: this.renderScreen(),
