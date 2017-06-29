@@ -1,5 +1,5 @@
-import Goal from './Goal';
-import Door from './Door';
+import Goal from './gameObjects/Goal';
+import Door from './gameObjects/Door';
 import Manager from './Manager';
 import mapGenerator from '../gameTools/MapGenerator';
 
@@ -13,6 +13,7 @@ class Level{
     this.game = game;
     this.entities = [this.player];
     this.type = 'level';
+    this.subtype = 'none';
 
     this.player.addLevel(this);
 

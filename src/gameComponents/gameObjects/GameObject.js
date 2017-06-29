@@ -1,9 +1,9 @@
-class GameComponent{
+class GameObject{
   constructor(type,subtype,translucent,solid,x,y,image,imageLayer,level){
     this.type = type;
     this.subtype = subtype;
-    this.translucent = true;
-    this.solid = true;
+    this.translucent = translucent;
+    this.solid = solid;
     this.pos = {x: x,
                 y: y};
 
@@ -17,4 +17,4 @@ class GameComponent{
   }
 }
 
-export default GameComponent;
+export default GameObject;

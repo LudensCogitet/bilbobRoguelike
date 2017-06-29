@@ -8,7 +8,7 @@ import {_compassDimensions as compassDimensions} from './reactComponents/Buttons
 
 import Camera from './gameComponents/Camera';
 import Level from './gameComponents/Level';
-import Player from './gameComponents/Player';
+import Player from './gameComponents/gameObjects/Player';
 
 import imageLibrary from './gameTools/ImageLibrary';
 
@@ -105,7 +105,6 @@ class App extends React.Component{
 
   componentDidMount(){
     this.outerDiv.style.width = this.screenDiv.clientWidth + "px";
-    console.log("BUTTON", this.buttonDiv.getBoundingClientRect());
     this.setState({buttons: <Buttons handleClick={this.takeTurn} dimensions={this.buttonDiv.getBoundingClientRect()} />});
   }
 

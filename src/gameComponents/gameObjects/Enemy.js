@@ -1,20 +1,12 @@
-import castRays from '../gameTools/castRays';
-import illuminate from '../gameTools/illuminate';
-import detectCollision from '../gameTools/detectCollision';
-import findPath from '../gameTools/findPath';
+import castRays from '../../gameTools/castRays';
+import illuminate from '../../gameTools/illuminate';
+import detectCollision from '../../gameTools/detectCollision';
+import findPath from '../../gameTools/findPath';
+import GameObject from './GameObject';
 
-class Enemy{
+class Enemy extends GameObject{
   constructor(x,y,image,level){
-    this.type = 'enemy';
-    this.subtype = 'none';
-    this.translucent = true;
-    this.solid = true;
-    this.pos = {x: x,
-                y: y};
-
-    this.image = image;
-    this.imageLayer = 3;
-    this.level = level;
+    super('enemy','none',true,true,x,y,image,3,level);
 
     this.sightRadius = 15;
 

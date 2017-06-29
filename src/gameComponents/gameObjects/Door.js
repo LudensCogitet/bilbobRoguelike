@@ -1,16 +1,9 @@
-import imageLibrary from '../gameTools/ImageLibrary';
+import imageLibrary from '../../gameTools/ImageLibrary';
+import GameObject from './GameObject';
 
-class Door{
+class Door extends GameObject{
   constructor(x,y,level){
-    this.type = 'door';
-    this.subtype = 'none';
-    this.translucent = false;
-    this.solid = false;
-    this.pos = {x: x,
-                y: y};
-    this.level = level;
-    this.image = imageLibrary.getImage('doorClosed');
-    this.imageLayer = 4;
+    super('door','none',false,false,x,y,imageLibrary.getImage('doorClosed'),4,level);
   }
 
   act(cause, action = null){

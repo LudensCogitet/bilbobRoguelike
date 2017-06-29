@@ -1,12 +1,10 @@
-import Enemy from './Enemy';
+import Enemy from './gameObjects/Enemy';
 import imageLibrary from '../gameTools/ImageLibrary';
 
 class Manager{
   constructor(level){
     this.type = 'manager';
     this.subtype = 'none';
-    this.translucent = false;
-    this.solid = false;
     this.pos = {x: -1,
                 y: -1};
 

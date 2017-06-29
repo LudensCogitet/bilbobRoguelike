@@ -1,16 +1,9 @@
-import getRandomInt from '../gameTools/getRandomInt';
+import getRandomInt from '../../gameTools/getRandomInt';
+import GameObject from './GameObject';
 
-class Goal{
+class Goal extends GameObject{
   constructor(x,y,image,level){
-    this.type = 'goal';
-    this.subtype = 'none';
-    this.translucent = true;
-    this.solid = false;
-    this.pos = {x: x,
-                y: y};
-    this.image = image;
-    this.imageLayer = 1;
-    this.level = level;
+    super('goal','none',true,false,x,y,image,1,level);
 
     this.emitMessageEvery = getRandomInt(10,21);
     this.currentTick = 0;

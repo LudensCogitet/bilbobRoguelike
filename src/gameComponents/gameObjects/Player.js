@@ -1,23 +1,13 @@
-import illuminate from '../gameTools/illuminate';
-import detectCollision from '../gameTools/detectCollision';
-import getRandomInt from '../gameTools/getRandomInt';
+import illuminate from '../../gameTools/illuminate';
+import detectCollision from '../../gameTools/detectCollision';
+import getRandomInt from '../../gameTools/getRandomInt';
+import GameObject from './GameObject';
 
-class Player{
+class Player extends GameObject{
   constructor(x,y,image,game){
-    this.type = 'player';
-    this.subtype = 'none';
-
-    this.translucent = true;
-    this.solid = false;
-
-    this.pos = {x: x,
-                y: x};
-
-    this.image = image;
-    this.imageLayer = 2;
+    super('player','none',true,false,x,y,image,2,null);
 
     this.game = game;
-    this.level = null;
     this.camera = null;
 
     this.lightsOn = true;
@@ -60,57 +50,61 @@ class Player{
     this.illuminate();
   }
 
+  handlePing(cause){
+    var northSouth = '';
+    var eastWest = '';
+    var comment = '';
+
+    if(cause.pos.y < this.pos.y -1)
+      northSouth = 'north';
+    else if(cause.pos.y > this.pos.y +1)
+      northSouth = 'south';
+
+    if(cause.pos.x < this.pos.x -1)
+      eastWest = 'west';
+    else if(cause.pos.x > this.pos.x +1)
+      eastWest= 'east';
+
+    var bigDimension = Math.max(this.level.width, this.level.height);
+
+    if(Math.abs(cause.pos.x - this.pos.x) > bigDimension/2 || Math.abs(cause.pos.y - this.pos.y) > bigDimension/2){
+      comment = '. It\'s pretty far off.';
+    }
+    else if(Math.abs(cause.pos.x - this.pos.x) < bigDimension/3 || Math.abs(cause.pos.y - this.pos.y) < bigDimension/3){
+      comment ='. It\'s close...';
+    }
+
+    if(cause.type == 'goal'){
+      var textOptions = ['<span class="blue">The unsettling sound of jangling keys and mouth-breathing can be heard from the '+northSouth+eastWest+comment + '</span>',
+                         '<span class="blue">A mischievous cackle reaches your ears from the '+northSouth+eastWest+comment + '</span>',
+                         '<span class="blue">You can hear the pitter-patter of that little bastard\'s tiny feet coming from the '+northSouth+eastWest+comment + '</span>'];
+
+      this.game.logText(textOptions[getRandomInt(0,3)],1);
+    }
+    else if(cause.type == 'door'){
+      this.game.logText('<span class="red">You hear a door slam open somewhere to the '+northSouth+eastWest+comment + '</span>',0);
+    }
+    else if(cause.type == 'enemy'){
+     switch(this.level.map[cause.pos.y][cause.pos.x].subtype){
+       case 'wet':
+         this.game.logText('<span class="red">Something splashes through a puddle to the '+northSouth+eastWest+comment + '</span>',0);
+       break;
+       case 'crunchy':
+         this.game.logText('<span class="red">You hear claws clacking on stones to the '+northSouth+eastWest+comment + '</span>',0);
+       break;
+       case 'soft':
+         this.game.logText('<span class="red">There\'s a rustling sound to the '+northSouth+eastWest+comment + '</span>',0);
+       break;
+       default:
+         this.game.logText('<span class="red">You hear a terrible howling coming from the '+northSouth+eastWest+comment + '</span>',0);
+     }
+    }
+  }
+
   act(cause, action = null){
     //console.log(cause, action);
      if(action == 'ping'){
-       var northSouth = '';
-       var eastWest = '';
-       var comment = '';
-
-       if(cause.pos.y < this.pos.y -1)
-         northSouth = 'north';
-       else if(cause.pos.y > this.pos.y +1)
-         northSouth = 'south';
-
-       if(cause.pos.x < this.pos.x -1)
-         eastWest = 'west';
-       else if(cause.pos.x > this.pos.x +1)
-         eastWest= 'east';
-
-       var bigDimension = Math.max(this.level.width, this.level.height);
-
-       if(Math.abs(cause.pos.x - this.pos.x) > bigDimension/2 || Math.abs(cause.pos.y - this.pos.y) > bigDimension/2){
-         comment = '. It\'s pretty far off.';
-       }
-       else if(Math.abs(cause.pos.x - this.pos.x) < bigDimension/3 || Math.abs(cause.pos.y - this.pos.y) < bigDimension/3){
-         comment ='. It\'s close...';
-       }
-
-       if(cause.type == 'goal'){
-         var textOptions = ['<span class="blue">The unsettling sound of jangling keys and mouth-breathing can be heard from the '+northSouth+eastWest+comment + '</span>',
-                            '<span class="blue">A mischievous cackle reaches your ears from the '+northSouth+eastWest+comment + '</span>',
-                            '<span class="blue">You can hear the pitter-patter of that little bastard\'s tiny feet coming from the '+northSouth+eastWest+comment + '</span>'];
-
-         this.game.logText(textOptions[getRandomInt(0,3)],1);
-       }
-       else if(cause.type == 'door'){
-         this.game.logText('<span class="red">You hear a door slam open somewhere to the '+northSouth+eastWest+comment + '</span>',0);
-       }
-       else if(cause.type == 'enemy'){
-        switch(this.level.map[cause.pos.y][cause.pos.x].subtype){
-          case 'wet':
-            this.game.logText('<span class="red">Something splashes through a puddle to the '+northSouth+eastWest+comment + '</span>',0);
-          break;
-          case 'crunchy':
-            this.game.logText('<span class="red">You hear claws clacking on stones to the '+northSouth+eastWest+comment + '</span>',0);
-          break;
-          case 'soft':
-            this.game.logText('<span class="red">There\'s a rustling sound to the '+northSouth+eastWest+comment + '</span>',0);
-          break;
-          default:
-            this.game.logText('<span class="red">You hear a terrible howling coming from the '+northSouth+eastWest+comment + '</span>',0);
-        }
-       }
+       this.handlePing(cause);
       }
       else{
         if(cause.type == 'manager' && action == 'lights out'){
@@ -148,8 +142,6 @@ class Player{
         }
         else if(cause.type == 'enemy' && action == 'collision'){
           this.game.logText('<div style="text-align: center; font-weight: bold; background-color: black; margin-left: -6px">The horrible, snarling creature leaps upon you, and in a terrifying instant your days of haulin\' ass and gettin\' paid are at an end. <h3>GAME OVER</h3><p /> (hit refresh to play again)</div>');
-          //cause.pos.x = this.pos.x;
-          //cause.pos.y = this.pos.y;
           this.game.stopPlaying();
         }
       }
