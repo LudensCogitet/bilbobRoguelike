@@ -123,12 +123,12 @@ class MapGenerator{
 
         point.plotted = true;
 
-        for(let i = 0; i < nearestNeighbors.length; i++){
-          var newWall = [point,nearestNeighbors[i]];
+        nearestNeighbors.forEach(neighbor=>{
+          var newWall = [point,neighbor];
           newWall.sort((a,b)=>{return (a.x - b.x) + (a.y - b.y);});
           if(walls.findIndex(wall=>{return newWall[0].x == wall[0].x && newWall[0].y == wall[0].y && newWall[1].x == wall[1].x && newWall[1].y == wall[1].y;}) == -1)
             walls.push(newWall);
-        }
+        });
       });
 
       toRemove = Math.floor(walls.length*removeWalls);
@@ -163,14 +163,15 @@ class MapGenerator{
       // place goal
       var gX = 1;
       var done = false;
-      var leftColumn = null;
+      var leftColumn = [];
+
+      var testGoalSpace = (row,index)=>{
+                                        if(row[gX] != 1)
+                                          leftColumn.push(index);
+                                       }
       while(!done){
         leftColumn = [];
-        map.forEach((row,index)=>{
-          if(row[gX] != 1)
-            leftColumn.push(index);
-        });
-
+        map.forEach(testGoalSpace);
         if(leftColumn.length < 1)
           gX++;
         else
@@ -182,14 +183,15 @@ class MapGenerator{
       // place player start
       var pX = width-1;
       done = false;
-      var rightColumn = null;
+      var rightColumn = [];
+
+      var testPlayerStart = (row,index)=>{
+                                          if(row[pX-1] != 1)
+                                            rightColumn.push(index);
+                                         }
       while(!done){
         rightColumn = [];
-        map.forEach((row,index)=>{
-          if(row[pX-1] != 1)
-            rightColumn.push(index);
-        });
-
+        map.forEach(testPlayerStart);
         if(rightColumn.length < 1)
           pX--;
         else
@@ -204,6 +206,16 @@ class MapGenerator{
        // Place monster spawners
       var monsterSpawnerPos = [];
       var coinFlip = Math.random() < 0.5 ? 1 : 2;
+
+      var row = [];
+
+      var testMonsterLocations = (cell,index)=>{
+                                                if(cell != 1 && index > spawnAreaMarginLeft
+                                                   && index < spawnAreaMarginRight
+                                                   && findPath(finalMap,startPos,{x:index, y: mY},'exists'))
+                                                    row.push(index);
+                                               }
+
       for(let i = 0; i < numMonsterSpawners; i++){
         var mY =  coinFlip % 2 == 0 ? height-2 : 1;
         var mYInc = coinFlip % 2 == 0 ? -1 : 1;
@@ -220,15 +232,10 @@ class MapGenerator{
           spawnAreaMarginLeft = width-2;
 
         done = false;
-        var row = null;
+
         while(!done){
           row = [];
-          map[mY].forEach((cell,index)=>{
-            if(cell != 1 && index > spawnAreaMarginLeft
-               && index < spawnAreaMarginRight
-               && findPath(finalMap,startPos,{x:index, y: mY},'exists'))
-              row.push(index);
-          });
+          map[mY].forEach(testMonsterLocations);
 
           if(row.length < 1)
             mY += mYInc;
