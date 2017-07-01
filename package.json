@@ -1,7 +1,7 @@
 {
   "name": "bilbob",
   "version": "0.1.0",
-	"homepage": "http://ludenscogitet.github.io/bilbob",
+	"homepage": "http://www.johnhiner.com/Projects/Roguelike/",
   "private": true,
   "dependencies": {
     "react": "^15.6.1",
